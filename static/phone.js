@@ -98,17 +98,17 @@ const rows = [
   ['shake',    0,   1, 'shake → new pattern'],
 ];
 
+// one line per number: name, bar, value (hover over a line to read what it does)
 document.getElementById('values').innerHTML = rows.map(([name, low, high, does]) => `
-  <div class="row">
+  <div class="row" title="${does}">
     <span>${name}</span>
     <div class="track"><div class="fill" id="fill-${name}"></div></div>
     <span class="number" id="number-${name}"></span>
-    <span class="does">${does}</span>
   </div>`).join('');
 
 function showValues() {
   for (const [name, low, high] of rows) {
-    const value = phone[name];
+    const value = Math.abs(phone[name]) < 0.005 ? 0 : phone[name];  // show 0.00, never -0.00
     const percent = clamp((value - low) / (high - low), 0, 1) * 100;
     document.getElementById('fill-' + name).style.width = percent + '%';
     document.getElementById('number-' + name).textContent = value.toFixed(high > 1 ? 0 : 2);
@@ -134,7 +134,7 @@ function clamp(value, low, high) {
 
 document.addEventListener('keydown', event => {
   const panel = document.getElementById('panel');
-  if (event.key === 'h') panel.hidden = !panel.hidden;
+  if (event.key.toLowerCase() === 'h') panel.hidden = !panel.hidden;
 });
 
 askForData();

@@ -5,42 +5,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Phone → OSC → Truchet tiles</title>
   <style>
-    html, body { margin: 0; height: 100%; overflow: hidden; background: #0b0d12; }
+    html, body { margin: 0; height: 100%; overflow: hidden; background: #15171c; }
     canvas { display: block; width: 100%; height: 100%; }
 
     /* the little data panel in the corner (press H to hide it) */
     #panel {
-      position: fixed; top: 16px; left: 16px; width: 290px;
-      padding: 14px 16px; border-radius: 10px;
-      background: rgba(11, 13, 18, 0.82); color: #e8eaf0;
-      font: 12px/1.5 ui-monospace, Menlo, Consolas, monospace;
+      position: fixed; top: 12px; left: 12px; max-width: 300px;
+      padding: 9px 12px; border-radius: 8px;
+      background: rgba(21, 23, 28, 0.85); color: #c9ced9;
+      font: 11px/1.7 ui-monospace, Menlo, Consolas, monospace;
     }
-    #panel h2 {
-      margin: 0 0 6px; font-size: 11px; font-weight: normal;
-      letter-spacing: 0.08em; text-transform: uppercase; color: #8b93a7;
-    }
-    #panel h2:not(:first-child) { margin-top: 14px; }
-    .row { display: grid; grid-template-columns: 62px 1fr 48px; gap: 8px; align-items: center; }
-    .track { height: 4px; border-radius: 2px; background: #2a3040; }
-    .fill { height: 100%; border-radius: 2px; background: #e8eaf0; }
+    .row { display: grid; grid-template-columns: 52px 64px 36px; gap: 8px; align-items: center; }
+    .track { height: 2px; background: #333946; }
+    .fill { height: 100%; background: #c9ced9; }
     .number { text-align: right; }
-    .does { grid-column: 1 / -1; margin: -3px 0 5px; color: #8b93a7; }
-    #raw { margin: 0; white-space: pre-wrap; word-break: break-all; color: #b4bbcc; }
-    #status { color: #ffd166; }
-    #status b { color: #fff; }
-    .hint { margin-top: 12px; color: #8b93a7; }
+    summary, .hint { color: #767e90; }
+    summary { margin-top: 5px; cursor: pointer; }
+    #raw { margin: 2px 0 0; white-space: pre-wrap; color: #9aa2b3; }
+    #status { margin-top: 5px; color: #e0b76a; }
+    #status:empty { display: none; }
   </style>
 </head>
 <body>
   <canvas id="canvas"></canvas>
 
   <div id="panel">
-    <h2>Your phone says</h2>
     <div id="values"></div>
-    <h2>Raw OSC messages</h2>
-    <pre id="raw"></pre>
+    <details>
+      <summary>raw OSC messages</summary>
+      <pre id="raw"></pre>
+    </details>
     <div id="status"></div>
-    <div class="hint">H = hide this panel</div>
+    <div class="hint">H hides this panel</div>
   </div>
 
   <script src="static/phone.js"></script>   <!-- gets the data  -->

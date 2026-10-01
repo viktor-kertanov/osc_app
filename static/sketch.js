@@ -17,16 +17,17 @@ const ctx = canvas.getContext('2d');
 
 let pattern = 1;       // which random pattern we are showing
 let lastShake = 0;
+const turns = {};      // how far each tile is turned right now (0 = not, 1 = a quarter turn)
 
 function draw() {
   const width = window.innerWidth;
   const height = window.innerHeight;
 
   // ---------- phone data → picture. Change these lines! ----------
-  const turned    = map(phone.tiltX, -0.7, 0.7, -0.05, 1.05);  // how many tiles are turned (0 = none, 1 = all)
-  const thickness = map(phone.tiltY, -0.7, 0.7, 0.06, 0.4);    // line thickness (1 = as wide as a tile)
+  const turned    = map(phone.tiltX, -0.7, 0.7, 0, 1);         // how many tiles are turned (0 = none, 1 = all)
+  const thickness = map(phone.tiltY, -0.7, 0.7, 0.04, 0.2);    // line thickness (1 = as wide as a tile)
   const colour    = phone.compass;                             // 0 … 360 around the colour wheel
-  const size      = map(phone.magnet, 30, 300, 60, 200);       // tile size in pixels
+  const size      = map(phone.magnet, 60, 400, 40, 160);       // tile size in pixels
 
   if (phone.shake > 0.5 && Date.now() - lastShake > 600) {     // a shake makes a new pattern
     pattern += 1;
@@ -34,8 +35,9 @@ function draw() {
   }
   // ----------------------------------------------------------------
 
-  ctx.fillStyle = `hsl(${colour + 200}, 35%, 9%)`;
+  ctx.fillStyle = '#15171c';
   ctx.fillRect(0, 0, width, height);
+  ctx.strokeStyle = `hsl(${colour}, 30%, 72%)`;  // a soft colour: 30% is how strong, 72% is how light
   ctx.lineWidth = thickness * size;
   ctx.lineCap = 'round';
 
@@ -46,12 +48,16 @@ function draw() {
   for (let column = -columns; column <= columns; column++) {
     for (let line = -lines; line <= lines; line++) {
       const luck = random(column, line, pattern);              // this tile's own number, 0 … 1
-      const turn = map(turned - luck, -0.05, 0.05, 0, 1);      // 0 = not turned, 1 = quarter turn
+      const wanted = luck < turned ? 1 : 0;                    // should this tile be turned?
+
+      // turn the tile a little towards where it should be, so it glides instead of jumping
+      const name = column + ',' + line;
+      const now = turns[name] ?? wanted;
+      turns[name] = now + (wanted - now) * 0.15;
 
       ctx.save();
       ctx.translate(width / 2 + column * size, height / 2 + line * size);  // go to the tile's centre
-      ctx.rotate(turn * Math.PI / 2);
-      ctx.strokeStyle = `hsl(${colour + luck * 70}, 85%, 62%)`;
+      ctx.rotate(turns[name] * Math.PI / 2);
 
       // two quarter circles, around two opposite corners of the tile
       ctx.beginPath();

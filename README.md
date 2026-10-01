@@ -63,7 +63,7 @@ python fake_phone.py
 | Hold it near a magnet | `phone.magnet` (about 50, up to hundreds) | tile size |
 | Shake it | `phone.shake` (0 … 1) | new pattern |
 
-Press **H** to hide the panel.
+The small panel in the corner shows these numbers live. Press **H** to hide it.
 
 ## 4. Make it your own
 
@@ -71,10 +71,10 @@ Open `static/sketch.js`. Near the top there are a few lines that connect the
 phone to the picture:
 
 ```js
-const turned    = map(phone.tiltX, -0.7, 0.7, -0.05, 1.05);
-const thickness = map(phone.tiltY, -0.7, 0.7, 0.06, 0.4);
+const turned    = map(phone.tiltX, -0.7, 0.7, 0, 1);
+const thickness = map(phone.tiltY, -0.7, 0.7, 0.04, 0.2);
 const colour    = phone.compass;
-const size      = map(phone.magnet, 30, 300, 60, 200);
+const size      = map(phone.magnet, 60, 400, 40, 160);
 ```
 
 Change them, save, and reload the page (no need to restart `app.py`). Some ideas:
@@ -85,7 +85,8 @@ Change them, save, and reload the page (no need to restart `app.py`). Some ideas
   `phone` object.
 
 Every message the phone sends is also in `phone.raw`, exactly as it arrived,
-for example `phone.raw['/gyrosc/gyro']`. The panel on the page lists them all.
+for example `phone.raw['/gyrosc/gyro']`. Click "raw OSC messages" in the panel
+to see them all.
 
 ## The files
 
@@ -110,6 +111,6 @@ for example `phone.raw['/gyrosc/gyro']`. The panel on the page lists them all.
 - **A direction feels backwards**
   Put a minus sign in front of that value in `translate()` in `static/phone.js`.
 - **You use another OSC app and nothing moves**
-  The app works if you can see its messages in the "raw OSC messages" list.
-  Every app names its messages differently, so put the names you see there
-  into `translate()` in `static/phone.js`.
+  Click "raw OSC messages" in the panel. If messages show up there, the
+  connection works. Every app names its messages differently, so put the
+  names you see there into `translate()` in `static/phone.js`.
